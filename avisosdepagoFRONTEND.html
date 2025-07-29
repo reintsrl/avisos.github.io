@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  <title>AVISOS DE PAGO</title>
+  <style>
+    :root {
+      --bg: #0e1361;
+      --card: #ffffff;
+      --primary: #f46b0b;
+      --text: #ffffff;
+      --accent: #e0e0e0;
+      --font: 'Segoe UI', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg);
+      color: #111;
+    }
+    h2 { margin: 0 0 14px; }
+    .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .filters { margin-bottom: 14px; }
+    label { color: #222; }
+    select, input[type="date"] {
+      padding: 6px 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+    }
+    button {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover { background: #f7f7f7; }
+    .view-switch {
+      margin: 10px 0 16px;
+      display: flex;
+      gap: 8px;
+    }
+    .view-switch button {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      background: #eaffea;
+    }
+    .view-switch button.active {
+      background: var(--primary);
+      color: #fff;
+    }
+    .table-card {
+        width: 100%;
+        max-height: 700px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 0px 5px;
+        font-size: 15px;
+    }
+    .graf-card {
+        width: 100%;
+        max-height: 750px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        color: #f46b0b;
+        padding: 0px 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    thead th {
+      background: var(--primary);
+      color: #fff;
+      text-align: left;
+      padding: 10px;
+      font-weight: bold;
+    }
+    tbody td, tfoot td {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr:hover { background: #f8f8fb; }
+    tfoot td {
+      font-weight: bold;
+      background: #e8f7e8;
+      border-top: 2px solid var(--primary);
+    }
+    .muted { color: var(--muted); }
+    .actions { margin-top: 4px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .cabecera {
+        background-color: #f46b0b;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 4px solid #f46b0b;
+        border-radius: 50px; /* para que se vea pegado y no "flotando" */
+        height: 150px;
+        width: 90%;
+        max-width: 1500px;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .cabecera2 {
+        background-image: url("C:/Users/Reint/OneDrive/Documents/web/fondocabecera.jpg");
+        background-size: cover;
+        background-position: center;
+        color: white;
+        height: 150px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+        }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+    }
+
+  .modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 1000px;
+    max-height: 100vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .cerrar {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .cerrar:hover {
+    color: black;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <style>
+    .titulo {
+        color: #ffffff;
+        font-size:70px;
+        position: relative; left:-10px;top: -5px;
+        margin: 0;
+        font-family: 'Oswald'
+    }
+    </style>
+  <div class="cabecera2">  
+    <div class="cabecera">  
+        <h2 class="titulo">AVISOS DE PAGO</h2>
+        <style>
+            .fechareciente{
+                padding: 0px 0px;
+                position: absolute; left: 80%;
+                color: #fff;
+                font-size:20px;
+                font-weight: bold;
+                font-family: 'Oswald'
+            }
+        </style>
+        <label for="fechaReciente" id="fechaRecienteLabel" class="fechareciente">
+            Actualización: <br>
+            <span id="fecha"></span>
+        </label>
+        <style>
+            .logo {
+                height: 20;
+                position: relative; top: -2px;
+                border-radius: 0px;
+                padding: 0px 75px;
+            }
+            </style>
+        <img src="C:/Users/Reint/OneDrive/Documents/web/reint.png" alt="logo" class="logo">
+    </div>
+  </div>
+  <div id="modalTabla" class="modal">
+    <div class="modal-content">
+      <span class="cerrar" onclick="cerrarModalTabla()">&times;</span>
+      <div id="contenidoTablaModal"></div>
+    </div>
+  </div>
+  <div class="row filters" id="contenedorFiltros">
+    <br>
+    <style>
+        .filtro-color{
+        color: #fff;
+        font-weight: bold;
+        padding: 0px 5px;
+        }
+        .filtro-color2{
+        font-weight: bold;
+        background-color: #f46b0b;
+        color: #fff;
+        border: 4px solid #f46b0b;
+        padding: 0px 5px;
+        }
+    </style>
+    <label class="filtro-color">Desde: <input type="date" id="desde"></label>
+    <label class="filtro-color">Hasta: <input type="date" id="hasta"></label>
+    <label class="filtro-color">
+    <span style="position: relative; top: -25px;">STD:</span>
+    <select id="std" multiple size="3" class="filtro-color2">
+        <option value="Todos">Todos</option>
+    </select>
+    </label>
+
+    <label class="filtro-color">
+    <span style="position: relative; top: -25px;">Prendarios:</span>
+    <select id="prendarios" multiple size="3" class="filtro-color2">
+        <option value="Todos">Todos</option>
+    </select>
+    </label>
+
+    <label class="filtro-color">
+    <span style="position: relative; top: -25px;">Lugar:</span>
+    <select id="lugar" multiple size="3" class="filtro-color2">
+        <option value="Todos">Todos</option>
+    </select>
+    </label>
+
+    <label class="filtro-color">
+    <span style="position: relative; top: -25px;">Team:</span>
+    <select id="team" multiple size="3" class="filtro-color2">
+        <option value="Todos">Todos</option>
+    </select>
+    </label>
+    <label class="filtro-color">Orden Monto:
+      <select id="ordenMonto" class="filtro-color2">
+        <option value="desc">Mayor a menor</option>
+        <option value="asc">Menor a mayor</option>
+      </select>
+    </label>
+    <label class="filtro-color">Orden Cant.:
+      <select id="ordenCantidad" class="filtro-color2">
+        <option value="desc">Mayor a menor</option>
+        <option value="asc">Menor a mayor</option>
+      </select>
+    </label>
+
+    <div class="actions">
+      <button id="btnLimpiar">Limpiar</button>
+      <button onclick="mostrarModalTablaActual()" style="margin-bottom: 10px;">Ampliar tabla</button>
+      <span id="estado" class="muted" style="color: #fff"></span>
+    </div>
+  </div>
+
+  <!-- Conmutador de vista -->
+  <div class="view-switch">
+    <button id="btnVistaEntidad" class="active" onclick="mostrarVista('entidad')" style="padding: 0px 20px;">Entidad</button>
+    <button id="btnVistaUsuario" onclick="mostrarVista('usuario')">Usuario</button>
+    <button id="btnVistaTeam" onclick="mostrarVista('team')">TEAM</button>
+    <button id="btnVistaSup" onclick="mostrarVista('sup')">SUPERVISOR</button>
+  </div>
+
+  <!-- Vista ENTIDAD -->
+  <div id="vistaEntidad" class="table-card">
+    <table>
+      <thead><tr><th>Entidad</th><th>Monto</th><th>Cantidad</th></tr></thead>
+      <tbody id="tbodyEntidad"></tbody>
+      <tfoot><tr><td>Total</td><td id="totalMontoEntidad">$ 0</td><td id="totalCantidadEntidad">0</td></tr></tfoot>
+    </table>
+  </div>
+
+  <!-- Vista USUARIO -->
+  <div id="vistaUsuario" class="table-card" style="display:none;">
+    <table>
+      <thead><tr><th>Usuario</th><th>Monto</th><th>Cantidad</th></tr></thead>
+      <tbody id="tbodyUsuario"></tbody>
+      <tfoot><tr><td>Total</td><td id="totalMontoUsuario">$ 0</td><td id="totalCantidadUsuario">0</td></tr></tfoot>
+    </table>
+  </div>
+
+  <!-- Vista TEAM (gráfico) -->
+  <div id="vistaTeam" class="graf-card" style="display:none;">
+    <canvas id="graficoTeam" height="100"></canvas>
+  </div>
+
+  <!-- Vista SUP (gráfico) -->
+  <div id="vistaSup" class="graf-card" style="display:none;">
+    <canvas id="graficoSup" height="100"></canvas>
+  </div>
+  
+  <script>
+    const API = "http://127.0.0.1:5000";
+    let vistaActual = "entidad";
+    let debounceTimer;
+    function debounce(fn, delay = 400) {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(fn, delay);
+    }
+    let graficoTeam, graficoSup;
+
+    function formatearMonto(n) {
+      const val = parseFloat(n || 0);
+      return val.toLocaleString("es-AR");
+    }
+
+    function setEstado(msg) {
+      document.getElementById("estado").textContent = msg || "";
+    }
+
+    function mostrarVista(vista) {
+      vistaActual = vista;
+      const vistas = ["Entidad", "Usuario", "Team", "Sup"];
+      vistas.forEach(v => {
+        document.getElementById("vista" + v).style.display = (vista.toLowerCase() === v.toLowerCase()) ? "block" : "none";
+        document.getElementById("btnVista" + v).classList.toggle("active", vista.toLowerCase() === v.toLowerCase());
+      });
+      debounce(actualizar);
+    }
+
+    function obtenerValoresMultiples(idSelect) {
+      const select = document.getElementById(idSelect);
+      const selectedOptions = Array.from(select.selectedOptions).map(o => o.value);
+      const filtered = selectedOptions.filter(v => v !== "Todos");
+      return filtered.length > 0 ? filtered.join(",") : "Todos";
+    }
+
+    async function actualizar() {
+      try {
+        destruirTodosLosGraficos();
+        setEstado("Cargando...");
+        const desde = document.getElementById("desde").value;
+        const hasta = document.getElementById("hasta").value;
+        const std = obtenerValoresMultiples("std");
+        const prendarios = obtenerValoresMultiples("prendarios");
+        const lugar = obtenerValoresMultiples("lugar");
+        const team = obtenerValoresMultiples("team");
+        const ordenMonto = document.getElementById("ordenMonto").value;
+        const ordenCantidad = document.getElementById("ordenCantidad").value;
+
+        const params = `?desde=${desde}&hasta=${hasta}&std=${encodeURIComponent(std)}&prendarios=${encodeURIComponent(prendarios)}&lugar=${encodeURIComponent(lugar)}&team=${encodeURIComponent(team)}&ordenMonto=${ordenMonto}&ordenCantidad=${ordenCantidad}`;
+
+        if (vistaActual === "entidad" || vistaActual === "usuario") {
+          const [resEnt, resUsu] = await Promise.all([
+            fetch(`${API}/entidades${params}&t=${Date.now()}`),
+            fetch(`${API}/usuarios${params}&t=${Date.now()}`)
+          ]);
+          const dataEnt = await resEnt.json();
+          const dataUsu = await resUsu.json();
+
+          actualizarTabla("Entidad", dataEnt);
+          actualizarTabla("Usuario", dataUsu);
+        }
+
+        if (vistaActual === "team") {
+          const res = await fetch(`${API}/team${params}&t=${Date.now()}`);
+          const data = await res.json();
+          renderGrafico("graficoTeam", data, "Por TEAM", grafico => graficoTeam = grafico);
+        }
+
+        if (vistaActual === "sup") {
+          const res = await fetch(`${API}/sup${params}&t=${Date.now()}`);
+          const data = await res.json();
+          renderGrafico("graficoSup", data, "Por SUPERVISOR", grafico => graficoSup = grafico);
+        }
+
+        setEstado("Listo.");
+        setTimeout(() => setEstado(""), 1200);
+      } catch (e) {
+        console.error(e);
+        alert("Error al actualizar: " + e.message);
+        setEstado("");
+      }
+    }
+
+    function actualizarTabla(tipo, data) {
+      const tbody = document.getElementById("tbody" + tipo);
+      tbody.innerHTML = "";
+      let totMonto = 0, totCant = 0;
+      data.forEach(row => {
+        const monto = parseFloat(row.total_monto || 0);
+        const cant = parseInt(row.cantidad || 0);
+        totMonto += monto;
+        totCant += cant;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${row[tipo.toLowerCase()]}</td><td>$ ${formatearMonto(monto)}</td><td>${cant}</td>`;
+        tbody.appendChild(tr);
+      });
+      document.getElementById("totalMonto" + tipo).textContent = "$ " + formatearMonto(totMonto);
+      document.getElementById("totalCantidad" + tipo).textContent = totCant.toString();
+    }
+    function destruirTodosLosGraficos() {
+      if (supcreado) {
+        supcreado.destroy();
+        supcreado = null;
+      }
+      if (teamcreado) {
+        teamcreado.destroy();
+        teamcreado = null;
+      }
+    }
+    let supcreado = null;
+    let teamcreado = null;
+
+    function renderGrafico(canvasId, data, titulo) {
+      const ctx = document.getElementById(canvasId).getContext("2d");
+
+      // Destruir el gráfico contrario
+      if (canvasId === 'graficoSup' && teamcreado) {
+          destruirTodosLosGraficos();
+      } else if (canvasId === 'graficoTeam' && supcreado) {
+          destruirTodosLosGraficos();
+      }
+
+      const campoNombre = Object.keys(data[0]).find(k => k !== "total_monto" && k !== "cantidad");
+      const labels = data.map(d => d[campoNombre] ?? "Sin nombre");
+      const valores = data.map(d => parseFloat(d.total_monto));
+
+      const nuevoGrafico = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels,
+              datasets: [{
+                  label: titulo,
+                  data: valores,
+                  backgroundColor: "#f46b0b"
+              }]
+          },
+                options: {
+                    plugins: { legend: { display: false } },
+                    responsive: true,
+                    scales: {
+                x: {
+                ticks: {
+                    color: "#ffffff"  // ⬅️ color de texto en el eje X (abajo)
+                }
+                },
+                y: {
+                beginAtZero: true,
+                ticks: {
+                    color: "#ffffff"  // ⬅️ color de texto en el eje Y (costado)
+                }
+                }
+            }
+            }
+        });
+
+      if (canvasId === 'graficoSup') {
+          supcreado = nuevoGrafico;
+      } else if (canvasId === 'graficoTeam') {
+          teamcreado = nuevoGrafico;
+      }
+    }
+
+    async function cargarFiltros() {
+      try {
+        const res = await fetch(`${API}/filtros?t=${Date.now()}`);
+        const data = await res.json();
+        ["std", "prendarios", "lugar", "team"].forEach(id => {
+          const el = document.getElementById(id);
+          el.innerHTML = '<option value="Todos">Todos</option>';
+          data[id].forEach(val => {
+            const opt = document.createElement("option");
+            opt.value = val;
+            opt.textContent = val;
+            el.appendChild(opt);
+          });
+        });
+      } catch (e) {
+        setEstado("Error al cargar filtros.");
+      }
+    }
+    async function obtenerFechaReciente() {
+        try {
+        const res = await fetch(`${API}/fecha_reciente?t=${Date.now()}`);
+        const data = await res.json();
+
+        // Depuración: muestra la respuesta completa para ver cómo está estructurada
+       
+
+        // Comprobamos si la respuesta tiene la fecha directamente en el objeto
+        const fechaReciente = data[0] ? data[0].fecha_reciente : null;
+
+        if (!fechaReciente) {
+            console.warn("No se encontró una fecha reciente válida.");
+            throw new Error("Fecha no disponible");
+        }
+
+        // Mostrar la fecha tal como está en el formato string
+        document.getElementById("fecha").textContent = `${fechaReciente}`;
+
+    } catch (error) {
+        console.error("Error al obtener la fecha reciente:", error);
+        document.getElementById("fechaRecienteLabel").textContent = "Fecha reciente: No disponible";
+        }
+    }   
+    function limpiar() {
+      ["std", "prendarios", "lugar", "team"].forEach(id => {
+        const select = document.getElementById(id);
+        for (const option of select.options) {
+          option.selected = option.value === "Todos";
+        }
+      });
+      document.getElementById("ordenMonto").value = "desc";
+      document.getElementById("ordenCantidad").value = "desc";
+      debounce(actualizar);
+    }
+
+    // Eventos
+    document.getElementById("btnLimpiar").addEventListener("click", limpiar);
+    document.getElementById("contenedorFiltros").addEventListener("change", e => {
+      if (e.target.tagName === "SELECT" || e.target.type === "date") debounce(actualizar);
+    });
+
+    // Inicialización
+    window.onload = () => {
+      const hoy = new Date();
+      const haceTres = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+      const fmt = d => d.toISOString().split("T")[0];
+      document.getElementById("hasta").value = fmt(hoy);
+      document.getElementById("desde").value = fmt(hoy);
+      cargarFiltros();
+      actualizar();
+      obtenerFechaReciente();
+    };
+    document.getElementById("ordenMonto").addEventListener("change", () => {
+    const ordenMonto = document.getElementById("ordenMonto").value;
+    if (ordenMonto) {
+        document.getElementById("ordenCantidad").value = "";
+    }
+    });
+
+    document.getElementById("ordenCantidad").addEventListener("change", () => {
+    const ordenCantidad = document.getElementById("ordenCantidad").value;
+    if (ordenCantidad) {
+        document.getElementById("ordenMonto").value = "";
+    }
+    });
+    
+    let vistaMovida = null;
+    function mostrarModalTablaActual() {
+      const modal = document.getElementById("modalTabla");
+      const contenido = document.getElementById("contenidoTablaModal");
+      const idVista = "vista" + vistaActual.charAt(0).toUpperCase() + vistaActual.slice(1);
+      const tablaOriginal = document.getElementById(idVista);
+
+      // Guardamos la referencia de la vista movida
+      vistaMovida = tablaOriginal;
+
+      // Movemos la tabla al modal
+      contenido.innerHTML = "";
+      contenido.appendChild(tablaOriginal);
+
+      modal.style.display = "block";
+    }
+
+
+    function cerrarModalTabla() {
+    const modal = document.getElementById("modalTabla");
+    const contenido = document.getElementById("contenidoTablaModal");
+
+    if (vistaMovida) {
+      // Devolvemos la tabla a su contenedor original
+      document.body.appendChild(vistaMovida);
+      vistaMovida = null;
+    }
+
+    modal.style.display = "none";
+  }
+
+
+  </script>
+</body>
+</html>
